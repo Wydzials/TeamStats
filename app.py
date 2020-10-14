@@ -11,10 +11,10 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/riders", methods=["POST", "GET"])
-def riders():
+@app.route("/team", methods=["POST", "GET"])
+def team():
     riders = Rider.query.all()
-    return render_template("riders.html", riders=riders)
+    return render_template("team.html", riders=riders)
 
 
 @app.route("/rider/<int:rider_id>/<name>")
