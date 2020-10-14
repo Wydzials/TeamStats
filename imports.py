@@ -1,11 +1,23 @@
 import csv
-from init import db, app
-from models import Rider, Event, Result
+from init import db
+from models import Rider, Event, Result, Team, Gear
 import pandas as pd
 
 
+def import_team():
+    with open("data/team.csv", "r") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            new_team = Team(name=row["name"],
+                            established=row["established"],
+                            city=row["city"])
+            if Team.query.filter_by(name=new_team.name).first() is None:
+                db.session.add(new_team)
+
+        db.session.commit()
+
+
 def import_riders():
-    print("Importing riders...")
     with open("data/riders.csv", "r") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -24,20 +36,7 @@ def import_riders():
         db.session.commit()
 
 
-def import_events():
-    with open("data/events.csv", "r") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            date = pd.to_datetime(row["date"])
-            new_event = Event(name=row["name"],
-                              date=date,
-                              city=row["city"])
-            if Event.query.filter_by(date=new_event.date).first() is None:
-                db.session().add(new_event)
-        db.session.commit()
-
-
-def new_import():
+def import_events_results():
     with open("data/results.csv", "r") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -46,7 +45,7 @@ def new_import():
                 time_seconds = time.total_seconds()
                 date = pd.to_datetime(row["date"])
                 names = row["rider"].split()
-                rider_id = Rider.query.filter_by(first_name=names[0], last_name=names[1]).first().id
+                rider_id = Rider.query.filter_by(first_name=names[0].strip(), last_name=names[1].strip()).first().id
                 name = row["name"]
 
                 place_open = int(row["place_open"].split('/')[0])
@@ -83,3 +82,27 @@ def new_import():
                 print("Invalid row number " + str(reader.line_num))
 
         db.session.commit()
+
+
+def import_gear():
+    with open("data/gear.csv", "r") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            names = row["rider"].split()
+            rider_id = Rider.query.filter_by(first_name=names[0].strip(), last_name=names[1].strip()).first().id
+            new_gear = Gear(name=row["name"],
+                            rider_id=rider_id,
+                            type=row["type"])
+
+            if Gear.query.filter_by(rider_id=rider_id).filter_by(name=row["name"]).first() is None:
+                db.session.add(new_gear)
+
+        db.session.commit()
+
+
+def import_all():
+    import_team()
+    import_riders()
+    import_events_results()
+    import_gear()
+

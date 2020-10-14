@@ -6,34 +6,48 @@
 
 {% block body %}
 <br>
-<h1>Strona teamu <b>Zerwani z Łańcucha</b></h1>
-<p>Liczba zawodników: {{riders|length}}</p>
-<p>Rok założenia: 2018</p>
+<h1>Strona teamu <b>{{ team.name }}</b></h1>
+<div class="row">
+    <div class="col-sm-4">
+        <ul class="list-group">
+            <li class="list-group-item text-muted">Informacje</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Liczba zawodników: </strong></span>{{riders|length}}</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Rok założenia: </strong></span>{{ team.established }}</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Miasto: </strong></span> {{ team.city }}</li>
+        </ul>
+    </div>
+
+    <div class="col-sm-8">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Zawodnik</th>
+                <th>Numer</th>
+                <th>Sektor</th>
+                <th>Kategoria wiekowa</th>
+            </tr>
+    
+            {% for rider in riders %}
+            <tr>
+                <td><a href="/rider/{{rider.id}}/{{rider.first_name}}-{{rider.last_name}}"> {{ rider.first_name }} {{ rider.last_name }} </a></td>
+                <td>{{ rider.number }}</td>
+    
+                {% if rider.sector > 0 %}
+                    <td>{{ rider.sector }}</td>
+                {% else %}
+                    <td>-</td>
+                {% endif %}
+    
+                <td>{{ rider.category }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<br>
 
 <div class="row">
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Zawodnik</th>
-            <th>Numer</th>
-            <th>Sektor</th>
-            <th>Kategoria wiekowa</th>
-        </tr>
-
-        {% for rider in riders %}
-        <tr>
-            <td><a href="/rider/{{rider.id}}/{{rider.first_name}}-{{rider.last_name}}"> {{ rider.first_name }} {{ rider.last_name }} </a></td>
-            <td>{{ rider.number }}</td>
-
-            {% if rider.sector > 0 %}
-                <td>{{ rider.sector }}</td>
-            {% else %}
-                <td>-</td>
-            {% endif %}
-
-            <td>{{ rider.category }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    
 </div>
 
 {% endblock %}

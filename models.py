@@ -28,7 +28,7 @@ class Result(db.Model):
     riders_open = db.Column(db.Integer)
     place_category = db.Column(db.Integer)
     riders_category = db.Column(db.Integer)
-    
+
     rider_id = db.Column(db.Integer, db.ForeignKey("riders.id"), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
 
@@ -47,3 +47,21 @@ class Event(db.Model):
 
     def __repr__(self):
         return "Event({}; {}; {})".format(self.name, self.date, self.city)
+
+
+class Team(db.Model):
+    __tablename__ = "team"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    established = db.Column(db.Integer, nullable=False)
+    city = db.Column(db.String(64), nullable=False)
+
+
+class Gear(db.Model):
+    __tablename__ = "gear"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), nullable=False)
+    type = db.Column(db.String(32), nullable=False)
+
+    rider_id = db.Column(db.Integer, db.ForeignKey("riders.id"), nullable=False)
+    

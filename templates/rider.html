@@ -14,7 +14,7 @@
     <hr>
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col">
             <ul class="list-group">
                 <li class="list-group-item text-muted">Podstawowe informacje</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Numer</strong></span>{{ rider.number }}</li>
@@ -23,7 +23,7 @@
             </ul>
         </div>
 
-        <div class="col-sm-4">
+        <div class="col">
             <ul class="list-group">
                 <li class="list-group-item text-muted">Dodatkowe statystyki</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów</strong></span>{{ stats.results_count }}</li>
@@ -33,10 +33,16 @@
             </ul>
         </div>
 
-        <div class="col-sm-4">
+        <div class="col">
+            {% if gear|length > 0 %}
             <ul class="list-group">
                 <li class="list-group-item text-muted">Sprzęt</li>
+                {% for g in gear %}
+                    <li class="list-group-item text-right"><span class="float-left"><strong>{{ g.type }}</strong></span>{{ g.name }}</li>
+                {% endfor %}
+
             </ul>
+            {% endif %}
 
         </div>
     </div>
@@ -54,15 +60,16 @@
 
             <div class="tab-content">
                 <div class="tab-pane active" id="home">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-striped">
                         <thead>
                             <tr>
                                 <th>Zawody</th>
                                 <th>Data</th>
                                 <th>Kategoria</th>
                                 <th>Czas</th>
-                                <th>Miejsce OPEN</th>
-                                <th>Miejsce w kategorii</th>
+                                <th>Długość</th>
+                                <th>Miejsce<br>OPEN</th>
+                                <th>Miejsce<br>w kategorii</th>
                             </tr>
                         </thead>
             
@@ -73,6 +80,7 @@
                                     <td>{{ result.event.date.date() }}</td>
                                     <td>{{ result.category }}</td>
                                     <td>{{ result.time }}</td>
+                                    <td>{{ result.length }} km</td>
                                     <td>{{ result.place_open }}/{{ result.riders_open }}</td>
                                     <td>{{ result.place_category }}/{{ result.riders_category }}</td>
                                 </tr>

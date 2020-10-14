@@ -2,8 +2,8 @@ from flask import render_template, request, redirect
 
 import imports
 from init import db, app
-from sqlalchemy import func
-from models import Rider, Event, Result
+from sqlalchemy import func, desc
+from models import Rider, Event, Result, Team, Gear
 
 
 @app.route("/")
@@ -14,13 +14,17 @@ def index():
 @app.route("/team", methods=["POST", "GET"])
 def team():
     riders = Rider.query.all()
-    return render_template("team.html", riders=riders)
+    team = Team.query.first()
+    return render_template("team.html", riders=riders, team=team)
 
 
 @app.route("/rider/<int:rider_id>/<name>")
 def rider(rider_id, name):
     rider = Rider.query.filter_by(id=rider_id).first()
+    gear = Gear.query.filter_by(rider_id=rider_id).all()
+
     results = Result.query.filter_by(rider_id=rider.id).all()
+    sorted_results = sorted(results, key=lambda k: k.event.date, reverse=True)
 
     results_count = db.session.query(Result).filter_by(rider_id=rider.id).count()
     length_sum = db.session.query(func.sum(Result.length)).filter_by(rider_id=rider.id).scalar()
@@ -33,10 +37,9 @@ def rider(rider_id, name):
              "time_sum": time_sum,
              "avg_speed": avg_speed}
 
-    return render_template("rider.html", rider=rider, results=results, stats=stats)
+    return render_template("rider.html", rider=rider, results=sorted_results, stats=stats, gear=gear)
 
 
 if __name__ == "__main__":
-    imports.import_riders()
-    imports.new_import()
+    imports.import_all()
     app.run(debug=True)
