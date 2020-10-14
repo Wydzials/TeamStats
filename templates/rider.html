@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+
+{% block body %}
+<hr>
+<div class="container bootstrap snippets bootdey">
+    <div class="row">
+            <h1>{{ rider.first_name }} {{ rider.last_name }}</h1></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <!--left col-->
+
+            <ul class="list-group">
+                <li class="list-group-item text-muted">Podstawowe informacje</li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Numer</strong></span>{{ rider.number }}</li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Sektor</strong></span>{{ rider.sector }}</li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Kategoria wiekowa</strong></span> {{ rider.category }}</li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Test<i class="fa fa-link fa-1x"></i></div>
+                <div class="panel-body"></div>
+            </div>
+
+            <ul class="list-group">
+                <li class="list-group-item text-muted">Dodatkowe statystyki <i class="fa fa-dashboard fa-1x"></i></li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów</strong></span>{{ stats.results_count }}</li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu</strong></span>{{ stats.length_sum }} km</li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu</strong></span>{{ stats.time_sum }} h</li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Średnia prędkość</strong></span> {{ stats.avg_speed }} km/h</li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Test 2</div>
+                <div class="panel-body">
+                    <i class="fa fa-facebook fa-2x"></i> <i class="fa fa-github fa-2x"></i> <i class="fa fa-twitter fa-2x"></i> <i class="fa fa-pinterest fa-2x"></i> <i class="fa fa-google-plus fa-2x"></i>
+                </div>
+            </div>
+
+        </div>
+        <!--/col-3-->
+        <div class="col-sm-9">
+
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#home" data-toggle="tab">Wyniki</a></li>
+                <li><a href="#messages" data-toggle="tab">Wiadomości</a></li>
+                <li><a href="#settings" data-toggle="tab">Edycja</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Zawody</th>
+                                <th>Data</th>
+                                <th>Kategoria</th>
+                                <th>Czas</th>
+                            </tr>
+                        </thead>
+            
+                        <tbody>
+                            {% for result in results %}
+                                <tr>
+                                    <td>{{ result.event.name }}</td>
+                                    <td>{{ result.event.date.date() }}</td>
+                                    <td>{{ result.category }}</td>
+                                    <td>{{ result.time }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4 text-center">
+                            <ul class="pagination" id="myPager"></ul>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                </div>
+                <!--/tab-pane-->
+                <div class="tab-pane" id="messages">
+
+                    <h2></h2>
+
+                    <ul class="list-group">
+                        <li class="list-group-item text-muted">Test</li>
+                    </ul>
+
+                </div>
+                <!--/tab-pane-->
+                <div class="tab-pane" id="settings">
+
+                    <hr>
+                    <form class="form" action="##" method="post" id="registrationForm">
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="first_name">
+                                    <h4>First name</h4></label>
+                                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="last_name">
+                                    <h4>Last name</h4></label>
+                                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <br>
+                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                                <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <!--/tab-pane-->
+        </div>
+        <!--/tab-content-->
+
+    </div>
+    <!--/col-9-->
+</div>
+<!--/row-->
+{% endblock %}

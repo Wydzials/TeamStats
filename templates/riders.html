@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block body %}
+<br>
+<h1>Strona teamu <b>Zerwani z Łańcucha</b></h1>
+<p>Liczba zawodników: {{riders|length}}</p>
+<p>Rok założenia: 2018</p>
+
+<div class="row">
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Zawodnik</th>
+            <th>Numer</th>
+            <th>Sektor</th>
+            <th>Kategoria wiekowa</th>
+        </tr>
+
+        {% for rider in riders %}
+        <tr>
+            <td><a href="/rider/{{rider.id}}/{{rider.first_name}}-{{rider.last_name}}"> {{ rider.first_name }} {{ rider.last_name }} </a></td>
+            <td>{{ rider.number }}</td>
+
+            {% if rider.sector > 0 %}
+                <td>{{ rider.sector }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+            <td>{{ rider.category }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
