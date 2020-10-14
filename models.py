@@ -23,6 +23,12 @@ class Result(db.Model):
     time_seconds = db.Column(db.Integer)
     length = db.Column(db.Float)
     category = db.Column(db.String(16))
+
+    place_open = db.Column(db.Integer)
+    riders_open = db.Column(db.Integer)
+    place_category = db.Column(db.Integer)
+    riders_category = db.Column(db.Integer)
+    
     rider_id = db.Column(db.Integer, db.ForeignKey("riders.id"), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
 

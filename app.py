@@ -6,7 +6,6 @@ from sqlalchemy import func
 from models import Rider, Event, Result
 
 
-# --- ROUTES ---
 @app.route("/")
 def index():
     return render_template("index.html")

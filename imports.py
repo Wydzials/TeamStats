@@ -49,6 +49,12 @@ def new_import():
                 rider_id = Rider.query.filter_by(first_name=names[0], last_name=names[1]).first().id
                 name = row["name"]
 
+                place_open = int(row["place_open"].split('/')[0])
+                riders_open = int(row["place_open"].split('/')[1])
+
+                place_category = int(row["place_category"].split('/')[0])
+                riders_category = int(row["place_category"].split('/')[1])
+
                 if pd.isnull(time):
                     raise Exception
 
@@ -66,7 +72,11 @@ def new_import():
                                             rider_id=rider_id,
                                             event_id=event_id,
                                             length=row["length"],
-                                            category=row["category"])
+                                            category=row["category"],
+                                            place_open=place_open,
+                                            riders_open=riders_open,
+                                            place_category=place_category,
+                                            riders_category=riders_category)
                         db.session.add(new_result)
 
             except:

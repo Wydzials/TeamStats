@@ -61,6 +61,8 @@
                                 <th>Data</th>
                                 <th>Kategoria</th>
                                 <th>Czas</th>
+                                <th>Miejsce OPEN</th>
+                                <th>Miejsce w kategorii</th>
                             </tr>
                         </thead>
             
@@ -71,6 +73,8 @@
                                     <td>{{ result.event.date.date() }}</td>
                                     <td>{{ result.category }}</td>
                                     <td>{{ result.time }}</td>
+                                    <td>{{ result.place_open }}/{{ result.riders_open }}</td>
+                                    <td>{{ result.place_category }}/{{ result.riders_category }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
