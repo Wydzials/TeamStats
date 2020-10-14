@@ -11,40 +11,39 @@
     <div class="row">
             <h1>{{ rider.first_name }} {{ rider.last_name }}</h1></div>
     </div>
-    <div class="row">
-        <div class="col-sm-3">
-            <!--left col-->
 
+    <div class="row">
+        <div class="col-sm-4">
             <ul class="list-group">
                 <li class="list-group-item text-muted">Podstawowe informacje</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Numer</strong></span>{{ rider.number }}</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Sektor</strong></span>{{ rider.sector }}</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Kategoria wiekowa</strong></span> {{ rider.category }}</li>
             </ul>
+        </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">Test<i class="fa fa-link fa-1x"></i></div>
-                <div class="panel-body"></div>
-            </div>
-
+        <div class="col-sm-4">
             <ul class="list-group">
-                <li class="list-group-item text-muted">Dodatkowe statystyki <i class="fa fa-dashboard fa-1x"></i></li>
+                <li class="list-group-item text-muted">Dodatkowe statystyki</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów</strong></span>{{ stats.results_count }}</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu</strong></span>{{ stats.length_sum }} km</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu</strong></span>{{ stats.time_sum }} h</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Średnia prędkość</strong></span> {{ stats.avg_speed }} km/h</li>
             </ul>
+        </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">Test 2</div>
-                <div class="panel-body">
-                    <i class="fa fa-facebook fa-2x"></i> <i class="fa fa-github fa-2x"></i> <i class="fa fa-twitter fa-2x"></i> <i class="fa fa-pinterest fa-2x"></i> <i class="fa fa-google-plus fa-2x"></i>
-                </div>
-            </div>
+        <div class="col-sm-4">
+            <ul class="list-group">
+                <li class="list-group-item text-muted">Sprzęt</li>
+            </ul>
 
         </div>
-        <!--/col-3-->
-        <div class="col-sm-9">
+    </div>
+
+    <h2>Wyniki</h2>
+    
+    <div class="row">
+        <div class="col-sm-12">
 
             <ul class="nav nav-tabs" id="myTab">
                 <li class="active"><a href="#home" data-toggle="tab">Wyniki</a></li>
