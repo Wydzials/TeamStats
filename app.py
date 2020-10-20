@@ -1,9 +1,9 @@
-from flask import render_template, request, redirect
+from flask import render_template
 
 import imports
 from init import db, app
-from sqlalchemy import func, desc
-from models import Rider, Event, Result, Team, Gear, Training
+from sqlalchemy import func
+from models import Rider, Result, Event, Team, Gear, Training
 
 
 @app.route("/")
@@ -18,8 +18,8 @@ def team():
     return render_template("team.html", riders=riders, team=team)
 
 
-@app.route("/rider/<int:rider_id>/<name>")
-def rider(rider_id, name):
+@app.route("/rider/<int:rider_id>")
+def rider(rider_id):
     rider = Rider.query.filter_by(id=rider_id).first()
     gear = Gear.query.filter_by(rider_id=rider_id).all()
 
@@ -40,7 +40,19 @@ def rider(rider_id, name):
              "time_sum": time_sum,
              "avg_speed": avg_speed}
 
-    return render_template("rider.html", rider=rider, results=sorted_results, stats=stats, gear=gear, trainings=sorted_trainings)
+    return render_template("rider.html",
+                           rider=rider,
+                           stats=stats,
+                           gear=gear,
+                           results=sorted_results,
+                           trainings=sorted_trainings)
+
+
+@app.route("/event/<int:event_id>")
+def event(event_id):
+    event = Event.query.filter_by(id=event_id).first()
+    results = Result.query.filter_by(event_id=event_id).all()
+    return render_template("event.html", event=event, results=results)
 
 
 if __name__ == "__main__":

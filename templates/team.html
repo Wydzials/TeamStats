@@ -28,7 +28,7 @@
     
             {% for rider in riders %}
             <tr>
-                <td><a href="/rider/{{rider.id}}/{{rider.first_name}}-{{rider.last_name}}"> {{ rider.first_name }} {{ rider.last_name }} </a></td>
+                <td><a href="/rider/{{rider.id}}"> {{ rider.first_name }} {{ rider.last_name }} </a></td>
                 <td>{{ rider.number }}</td>
     
                 {% if rider.sector > 0 %}
