@@ -27,7 +27,7 @@
             <ul class="list-group">
                 <li class="list-group-item text-muted">Dodatkowe statystyki</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów</strong></span>{{ stats.results_count }}</li>
-                <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu</strong></span>{{ stats.length_sum }} km</li>
+                <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu</strong></span>{{ stats.distance_sum }} km</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu</strong></span>{{ stats.time_sum }} h</li>
                 <li class="list-group-item text-right"><span class="float-left"><strong>Średnia prędkość</strong></span> {{ stats.avg_speed }} km/h</li>
             </ul>
@@ -67,7 +67,7 @@
                                 <th>Data</th>
                                 <th>Kategoria</th>
                                 <th>Czas</th>
-                                <th>Długość</th>
+                                <th>Dystans</th>
                                 <th>Miejsce<br>OPEN</th>
                                 <th>Miejsce<br>w kategorii</th>
                             </tr>
@@ -80,13 +80,40 @@
                                     <td>{{ result.event.date.date() }}</td>
                                     <td>{{ result.category }}</td>
                                     <td>{{ result.time }}</td>
-                                    <td>{{ result.length }} km</td>
+                                    <td>{{ result.distance }} km</td>
                                     <td>{{ result.place_open }}/{{ result.riders_open }}</td>
                                     <td>{{ result.place_category }}/{{ result.riders_category }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+
+                    {% if trainings|length > 0 %}
+                    <h1>Ostatnie treningi</h1>
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <th>Data</th>
+                            <th>Czas</th>
+                            <th>Dystans</th>
+                            <th>Średnia prędkość</th>
+                            <th>Przewyższenia</th>
+                        </thead>
+
+                        <tbody>
+                            {% for training in trainings %}
+                                <tr>
+                                    <td>{{ training.date.date() }}</td>
+                                    <td>{{ training.time }}</td>
+                                    <td>{{ training.distance|round(2) }}</td>
+                                    <td>{{ training.average_speed|round(2) }}</td>
+                                    <td>{{ training.elevation }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                        
+
                     <hr>
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4 text-center">

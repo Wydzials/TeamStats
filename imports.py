@@ -1,7 +1,8 @@
 import csv
 from init import db
-from models import Rider, Event, Result, Team, Gear
+from models import Rider, Event, Result, Team, Gear, Training
 import pandas as pd
+import datetime
 
 
 def import_team():
@@ -70,7 +71,7 @@ def import_events_results():
                                             time_seconds=time_seconds,
                                             rider_id=rider_id,
                                             event_id=event_id,
-                                            length=row["length"],
+                                            distance=row["distance"],
                                             category=row["category"],
                                             place_open=place_open,
                                             riders_open=riders_open,
@@ -100,9 +101,34 @@ def import_gear():
         db.session.commit()
 
 
+def import_trainings():
+    with open("data/trainings.csv", "r") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            date = pd.to_datetime(row["date"])
+            time = datetime.timedelta(seconds=int(row["moving_time"]))
+            distance = float(row["distance"]) / 1000
+            average_speed = distance / (time.seconds / 3600)
+
+            names = row["rider"].split()
+            rider_id = Rider.query.filter_by(first_name=names[0].strip(), last_name=names[1].strip()).first().id
+
+            new_training = Training(rider_id=rider_id,
+                                    date=date,
+                                    time=time,
+                                    distance=distance,
+                                    average_speed=average_speed,
+                                    elevation=round(float(row["elevation"])))
+
+            if Training.query.filter_by(date=date).filter_by(distance=distance).first() is None:
+                db.session.add(new_training)
+            
+        db.session.commit()
+
+
 def import_all():
     import_team()
     import_riders()
     import_events_results()
     import_gear()
-
+    import_trainings()

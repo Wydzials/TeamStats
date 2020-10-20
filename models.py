@@ -11,6 +11,8 @@ class Rider(db.Model):
     sector = db.Column(db.Integer)
 
     results = db.relationship("Result", backref="rider", lazy=True)
+    gear = db.relationship("Gear", backref="rider", lazy=True)
+    trainings = db.relationship("Training", backref="rider", lazy=True)
 
     def __repr__(self):
         return "Rider({}; {}; {})".format(self.first_name, self.last_name, self.number)
@@ -21,7 +23,7 @@ class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.Interval)
     time_seconds = db.Column(db.Integer)
-    length = db.Column(db.Float)
+    distance = db.Column(db.Float)
     category = db.Column(db.String(16))
 
     place_open = db.Column(db.Integer)
@@ -63,5 +65,17 @@ class Gear(db.Model):
     name = db.Column(db.String(32), nullable=False)
     type = db.Column(db.String(32), nullable=False)
 
+    rider_id = db.Column(db.Integer, db.ForeignKey("riders.id"), nullable=False)
+
+
+class Training(db.Model):
+    __tablename__ = "trainings"
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime(), nullable=False)
+    distance = db.Column(db.Float)
+    time = db.Column(db.Interval)
+    average_speed = db.Column(db.Float)
+    elevation = db.Column(db.Integer)
+    
     rider_id = db.Column(db.Integer, db.ForeignKey("riders.id"), nullable=False)
     
