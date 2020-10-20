@@ -22,8 +22,6 @@ def import_riders():
     with open("data/riders.csv", "r") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            if("#" in row["id"]):
-                continue
             new_rider = Rider(id=row["id"],
                               first_name=row["first_name"],
                               last_name=row["last_name"],
@@ -33,7 +31,7 @@ def import_riders():
 
             if Rider.query.filter_by(first_name=new_rider.first_name).filter_by(last_name=new_rider.last_name).first() is None:
                 db.session.add(new_rider)
-                print("Found new rider: {}".format(new_rider))
+
         db.session.commit()
 
 
@@ -122,7 +120,7 @@ def import_trainings():
 
             if Training.query.filter_by(date=date).filter_by(distance=distance).first() is None:
                 db.session.add(new_training)
-            
+
         db.session.commit()
 
 

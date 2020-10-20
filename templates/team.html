@@ -5,16 +5,38 @@
 
 
 {% block body %}
+
+<h1>Team <b>{{ team.name }}</b></h1>
+
 <br>
-<h1>Strona teamu <b>{{ team.name }}</b></h1>
+
 <div class="row">
+
     <div class="col-sm-4">
-        <ul class="list-group">
-            <li class="list-group-item text-muted">Informacje</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Liczba zawodników: </strong></span>{{riders|length}}</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Rok założenia: </strong></span>{{ team.established }}</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Miasto: </strong></span> {{ team.city }}</li>
-        </ul>
+        <div class="row">
+            <div class="col">
+                <ul class="list-group">
+                    <li class="list-group-item text-muted">Informacje</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Liczba zawodników </strong></span>{{riders|length}}</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Rok założenia </strong></span>{{ team.established }}</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Miasto </strong></span> {{ team.city }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col">
+                <ul class="list-group">
+                    <li class="list-group-item text-muted">Statystyki</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów </strong></span>{{ stats.results_count }}</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu </strong></span>{{ stats.distance_sum }} km</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu  </strong></span> {{ stats.time_sum }} h</li>
+                </ul>
+            </div>
+
+        </div>
     </div>
 
     <div class="col-sm-8">
@@ -46,8 +68,5 @@
 
 <br>
 
-<div class="row">
-    
-</div>
 
 {% endblock %}

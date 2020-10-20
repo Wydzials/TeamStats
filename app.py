@@ -8,14 +8,24 @@ from models import Rider, Result, Event, Team, Gear, Training
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return team()
 
 
 @app.route("/team", methods=["POST", "GET"])
 def team():
     riders = Rider.query.all()
     team = Team.query.first()
-    return render_template("team.html", riders=riders, team=team)
+
+    results_count = db.session.query(Result).count()
+    distance_sum = db.session.query(func.sum(Result.distance)).scalar()
+    time_seconds = db.session.query(func.sum(Result.time_seconds)).scalar()
+    time_sum = round(time_seconds / 3600, 1)
+
+    stats = {"results_count": results_count,
+             "distance_sum": distance_sum,
+             "time_sum": time_sum}
+
+    return render_template("team.html", riders=riders, team=team, stats=stats)
 
 
 @app.route("/rider/<int:rider_id>")
