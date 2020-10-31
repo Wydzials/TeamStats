@@ -8,7 +8,7 @@
 {% block body %}
 
 <div class="row">
-    <h1><b>{{ rider.first_name }} {{ rider.last_name }}</b></h1>
+    <h1><b>{{ rider.first_name }} {{ rider.last_name[0] }}.</b></h1>
 </div>
 
 <br>
@@ -16,20 +16,27 @@
 <div class="row justify-content-center">
     <div class="col-4">
         <ul class="list-group">
-            <li class="list-group-item text-muted">Podstawowe informacje</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Numer</strong></span>{{ rider.number }}</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Sektor</strong></span>{{ rider.sector }}</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Kategoria wiekowa</strong></span> {{ rider.category }}</li>
+            <li class="list-group-item text-muted">Informacje</li>
+            <li class="list-group-item text-right"><span
+                    class="float-left"><strong>Numer</strong></span>{{ rider.number }}</li>
+            <li class="list-group-item text-right"><span
+                    class="float-left"><strong>Sektor</strong></span>{{ rider.sector }}</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Kategoria wiekowa</strong></span>
+                {{ rider.category }}</li>
         </ul>
     </div>
 
     <div class="col-4">
         <ul class="list-group">
             <li class="list-group-item text-muted">Statystyki</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów</strong></span>{{ stats.results_count }}</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu</strong></span>{{ stats.distance_sum }} km</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu</strong></span>{{ stats.time_sum }} h</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Średnia prędkość</strong></span> {{ stats.avg_speed }} km/h</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Liczba
+                        startów</strong></span>{{ stats.results_count }}</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Suma
+                        dystansu</strong></span>{{ stats.distance_sum }} km</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Suma
+                        czasu</strong></span>{{ stats.time_sum }} h</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Średnia prędkość</strong></span>
+                {{ stats.avg_speed }} km/h</li>
         </ul>
     </div>
 
@@ -38,7 +45,8 @@
         <ul class="list-group">
             <li class="list-group-item text-muted">Sprzęt</li>
             {% for g in gear %}
-                <li class="list-group-item text-right"><span class="float-left"><strong>{{ g.type }}</strong></span>{{ g.name }}</li>
+            <li class="list-group-item text-right"><span
+                    class="float-left"><strong>{{ g.type }}</strong></span>{{ g.name }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -47,129 +55,65 @@
 </div>
 
 <h2>Wyniki</h2>
-    
+
 <div class="row">
     <div class="col-sm-12">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Zawody</th>
+                    <th>Data</th>
+                    <th>Kategoria</th>
+                    <th>Czas</th>
+                    <th>Dystans</th>
+                    <th>Miejsce<br>OPEN</th>
+                    <th>Miejsce<br>w kategorii</th>
+                </tr>
+            </thead>
 
-        <ul class="nav nav-tabs" id="myTab">
-            <li class="active"><a href="#home" data-toggle="tab">Wyniki</a></li>
-            <li><a href="#messages" data-toggle="tab">Wiadomości</a></li>
-            <li><a href="#settings" data-toggle="tab">Edycja</a></li>
-        </ul>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td><a href="/event/{{ result.event.id }}">{{ result.event.name }}</a></td>
+                    <td>{{ result.event.date.date() }}</td>
+                    <td>{{ result.category }}</td>
+                    <td>{{ result.time }}</td>
+                    <td>{{ result.distance }} km</td>
+                    <td>{{ result.place_open }}/{{ result.riders_open }}</td>
+                    <td>{{ result.place_category }}/{{ result.riders_category }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-        <div class="tab-content">
-            <div class="tab-pane active" id="home">
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Zawody</th>
-                            <th>Data</th>
-                            <th>Kategoria</th>
-                            <th>Czas</th>
-                            <th>Dystans</th>
-                            <th>Miejsce<br>OPEN</th>
-                            <th>Miejsce<br>w kategorii</th>
-                        </tr>
-                    </thead>
-        
-                    <tbody>
-                        {% for result in results %}
-                            <tr>
-                                <td><a href="/event/{{ result.event.id }}">{{ result.event.name }}</a></td>
-                                <td>{{ result.event.date.date() }}</td>
-                                <td>{{ result.category }}</td>
-                                <td>{{ result.time }}</td>
-                                <td>{{ result.distance }} km</td>
-                                <td>{{ result.place_open }}/{{ result.riders_open }}</td>
-                                <td>{{ result.place_category }}/{{ result.riders_category }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        {% if trainings|length > 0 %}
+        <br>
+        <h2>Ostatnie treningi</h2>
+        <br>
+        <table class="table table-sm  table-hover table-striped">
+            <thead>
+                <th>Data</th>
+                <th>Czas</th>
+                <th>Dystans</th>
+                <th>Średnia prędkość</th>
+                <th>Przewyższenia</th>
+            </thead>
 
-                {% if trainings|length > 0 %}
-                <h2>Ostatnie treningi</h2>
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <th>Data</th>
-                        <th>Czas</th>
-                        <th>Dystans</th>
-                        <th>Średnia prędkość</th>
-                        <th>Przewyższenia</th>
-                    </thead>
-
-                    <tbody>
-                        {% for training in trainings %}
-                            <tr>
-                                <td>{{ training.date.date() }}</td>
-                                <td>{{ training.time }}</td>
-                                <td>{{ training.distance|round(2) }}</td>
-                                <td>{{ training.average_speed|round(2) }}</td>
-                                <td>{{ training.elevation }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% endif %}
-                    
-
-                <hr>
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4 text-center">
-                        <ul class="pagination" id="myPager"></ul>
-                    </div>
-                </div>
-
-                <hr>
-
-            </div>
-            <!--/tab-pane-->
-            <div class="tab-pane" id="messages">
-
-                <h2></h2>
-
-                <ul class="list-group">
-                    <li class="list-group-item text-muted">Test</li>
-                </ul>
-
-            </div>
-            <!--/tab-pane-->
-            <div class="tab-pane" id="settings">
-
-                <hr>
-                <form class="form" action="##" method="post" id="registrationForm">
-                    <div class="form-group">
-
-                        <div class="col-xs-6">
-                            <label for="first_name">
-                                <h4>First name</h4></label>
-                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
-                        </div>
-                    </div>
-                    <div class="form-group">
-
-                        <div class="col-xs-6">
-                            <label for="last_name">
-                                <h4>Last name</h4></label>
-                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <br>
-                            <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                            <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-        </div>
-        <!--/tab-pane-->
+            <tbody>
+                {% for training in trainings %}
+                <tr>
+                    <td>{{ training.date.date() }}</td>
+                    <td>{{ training.time }}</td>
+                    <td>{{ training.distance|round(2) }} km</td>
+                    <td>{{ training.average_speed|round(2) }} km/h</td>
+                    <td>{{ training.elevation }} m</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <hr>
     </div>
-    <!--/tab-content-->
-
 </div>
 
 {% endblock %}

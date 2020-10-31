@@ -10,6 +10,7 @@
 <div class="row">
     <h1>Zawody <b>{{ event.name }}</b></h1>
 </div>
+
 <br>
 
 <div class="row justify-content-around">
@@ -21,7 +22,6 @@
         </ul>
     </div>
 </div>
-
 
 <br>
 
@@ -42,7 +42,7 @@
         <tbody>
             {% for result in results %}
                 <tr>
-                    <td><a href="/rider/{{result.rider.id}}">{{ result.rider.first_name }} {{ result.rider.last_name }}</a></td>
+                    <td><a href="/rider/{{result.rider.id}}">{{ result.rider.first_name }} {{ result.rider.last_name[0] }}.</a></td>
                     <td>{{ result.category }}</td>
                     <td>{{ result.time }}</td>
                     <td>{{ result.distance }} km</td>
@@ -53,6 +53,5 @@
         </tbody>
     </table>
 </div>
-
 
 {% endblock %}
