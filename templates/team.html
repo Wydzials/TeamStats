@@ -11,15 +11,22 @@
 <br>
 
 <div class="row">
-    
+
     <div class="col-sm-4">
         <div class="row">
             <div class="col">
                 <ul class="list-group">
-                    <li class="list-group-item text-muted">Informacje</li>
-                    <li class="list-group-item text-right"><span class="float-left"><strong>Liczba zawodników </strong></span>{{riders|length}}</li>
-                    <li class="list-group-item text-right"><span class="float-left"><strong>Rok założenia </strong></span>{{ team.established }}</li>
-                    <li class="list-group-item text-right"><span class="float-left"><strong>Miasto </strong></span> {{ team.city }}</li>
+                    <li class="list-group-item text-muted">
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z" />
+                            <circle cx="8" cy="4.5" r="1" />
+                        </svg>
+                        Informacje
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Liczba zawodników</strong></span>{{riders|length}}</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Rok założenia</strong></span>{{ team.established }}</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Miasto </strong></span>{{ team.city }}</li>
                 </ul>
             </div>
         </div>
@@ -29,10 +36,15 @@
         <div class="row">
             <div class="col">
                 <ul class="list-group">
-                    <li class="list-group-item text-muted">Statystyki</li>
-                    <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów </strong></span>{{ stats.results_count }}</li>
-                    <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu </strong></span>{{ stats.distance_sum }} km</li>
-                    <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu  </strong></span> {{ stats.time_sum }} h</li>
+                    <li class="list-group-item text-muted">
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-graph-up" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5z" />
+                        </svg>
+                        Statystyki
+                    </li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów</strong></span>{{ stats.results_count }}</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu</strong></span>{{ stats.distance_sum }} km</li>
+                    <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu </strong></span>{{ stats.time_sum }} h</li>
                 </ul>
             </div>
 
@@ -47,23 +59,23 @@
                 <th>Sektor</th>
                 <th>Kategoria wiekowa</th>
             </tr>
-    
+
             {% for rider in riders %}
             <tr>
                 <td><a href="/rider/{{rider.id}}"> {{ rider.first_name }} {{ rider.last_name[0] }}. </a></td>
-                
+
                 {% if rider.number > 0 %}
-                    <td>{{ rider.number }}</td>
+                <td>{{ rider.number }}</td>
                 {% else %}
-                    <td>-</td>
+                <td>-</td>
                 {% endif %}
-    
+
                 {% if rider.sector.name is not none %}
-                    <td>{{ rider.sector.name }}</td>
+                <td>{{ rider.sector.name }}</td>
                 {% else %}
-                    <td>-</td>
+                <td>-</td>
                 {% endif %}
-    
+
                 <td>{{ rider.category }}</td>
             </tr>
             {% endfor %}

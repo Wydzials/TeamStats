@@ -16,11 +16,16 @@
 <div class="row justify-content-center">
     <div class="col-4">
         <ul class="list-group">
-            <li class="list-group-item text-muted">Informacje</li>
-            <li class="list-group-item text-right"><span
-                    class="float-left"><strong>Numer</strong></span>{{ rider.number }}</li>
-            <li class="list-group-item text-right"><span
-                    class="float-left"><strong>Sektor</strong></span>{{ rider.sector.name }}</li>
+            <li class="list-group-item text-muted">
+                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z" />
+                    <circle cx="8" cy="4.5" r="1" />
+                </svg>
+                Informacje o zawodniku
+            </li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Numer</strong></span>{{ rider.number }}</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Sektor</strong></span>{{ rider.sector.name }}</li>
             <li class="list-group-item text-right"><span class="float-left"><strong>Kategoria wiekowa</strong></span>
                 {{ rider.category }}</li>
         </ul>
@@ -28,25 +33,33 @@
 
     <div class="col-4">
         <ul class="list-group">
-            <li class="list-group-item text-muted">Statystyki</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Liczba
-                        startów</strong></span>{{ stats.results_count }}</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Suma
-                        dystansu</strong></span>{{ stats.distance_sum }} km</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Suma
-                        czasu</strong></span>{{ stats.time_sum }} h</li>
-            <li class="list-group-item text-right"><span class="float-left"><strong>Średnia prędkość</strong></span>
-                {{ stats.avg_speed }} km/h</li>
+            <li class="list-group-item text-muted">
+                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-graph-up" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5z" />
+                </svg>
+                Statystyki
+            </li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Liczba startów</strong></span>{{ stats.results_count }}</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Suma dystansu</strong></span>{{ stats.distance_sum }} km</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Suma czasu</strong></span>{{ stats.time_sum }} h</li>
+            <li class="list-group-item text-right"><span class="float-left"><strong>Średnia prędkość</strong></span>{{ stats.avg_speed }} km/h</li>
         </ul>
     </div>
 
     {% if gear|length > 0 %}
     <div class="col-4">
         <ul class="list-group">
-            <li class="list-group-item text-muted">Sprzęt</li>
+            <li class="list-group-item text-muted">
+                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-bicycle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M4 4.5a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1v.5h4.14l.386-1.158A.5.5 0 0 1 11 4h1a.5.5 0 0 1 0 1h-.64l-.311.935.807 1.29a3 3 0 1 1-.848.53l-.508-.812-2.076 3.322A.5.5 0 0 1 8 10.5H5.959a3 3 0 1 1-1.815-3.274L5 5.856V5h-.5a.5.5 0 0 1-.5-.5zm1.5 2.443l-.508.814c.5.444.85 1.054.967 1.743h1.139L5.5 6.943zM8 9.057L9.598 6.5H6.402L8 9.057zM4.937 9.5a1.997 1.997 0 0 0-.487-.877l-.548.877h1.035zM3.603 8.092A2 2 0 1 0 4.937 10.5H3a.5.5 0 0 1-.424-.765l1.027-1.643zm7.947.53a2 2 0 1 0 .848-.53l1.026 1.643a.5.5 0 1 1-.848.53L11.55 8.623z" />
+                </svg>
+                Sprzęt
+            </li>
             {% for g in gear %}
-            <li class="list-group-item text-right"><span
-                    class="float-left"><strong>{{ g.type }}</strong></span>{{ g.name }}</li>
+            <li class="list-group-item text-right">
+                <span class="float-left"><strong>{{ g.type }}</strong></span>{{ g.name }}
+            </li>
             {% endfor %}
         </ul>
     </div>
@@ -78,7 +91,11 @@
                     <td>{{ result.event.date.date() }}</td>
                     <td>{{ result.category }}</td>
                     <td>{{ result.time }}</td>
-                    <td>{{ result.distance }} km</td>
+                    <td>{{ result.distance }} km
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar" role="progressbar" style="width: {{2.5 * result.distance }}%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </td>
                     <td>{{ result.place_open }}/{{ result.riders_open }}</td>
                     <td>{{ result.place_category }}/{{ result.riders_category }}</td>
                 </tr>
