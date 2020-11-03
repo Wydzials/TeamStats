@@ -51,7 +51,12 @@
             {% for rider in riders %}
             <tr>
                 <td><a href="/rider/{{rider.id}}"> {{ rider.first_name }} {{ rider.last_name[0] }}. </a></td>
-                <td>{{ rider.number }}</td>
+                
+                {% if rider.number > 0 %}
+                    <td>{{ rider.number }}</td>
+                {% else %}
+                    <td>-</td>
+                {% endif %}
     
                 {% if rider.sector > 0 %}
                     <td>{{ rider.sector }}</td>

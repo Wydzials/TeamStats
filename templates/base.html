@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -16,13 +16,17 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('team') }}">
-                <img src="/static/logo.jpg" width="100" alt="Logo">
+                <img src="/static/bike.jpeg" width="100" alt="Logo">
             </a>
 
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('team') }}">Strona główna</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('last_event') }}">Ostatnie zawody</a>
+                </li>
+
             </ul>
         </div>
     </nav>

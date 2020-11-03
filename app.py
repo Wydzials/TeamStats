@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, redirect
 
 import imports
 from init import db, app
@@ -63,6 +63,14 @@ def event(event_id):
     event = Event.query.filter_by(id=event_id).first()
     results = Result.query.filter_by(event_id=event_id).all()
     return render_template("event.html", event=event, results=results)
+
+
+@app.route("/last")
+def last_event():
+    events = Event.query.all()
+    last_event = sorted(events, key=lambda k: k.date, reverse=True)[0]
+    id = last_event.id
+    return redirect(f"/event/{id}")
 
 
 if __name__ == "__main__":
