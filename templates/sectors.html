@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block body %}
+<div class="row">
+    <h1>Zawodnicy z podziałem na sektory</h1>
+</div>
+
+<div class="row">
+    {% for sector, riders in riders_by_sector.items() %}
+    <div class="col-6">
+        <br>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th colspan="3">
+                        Sektor {{ sector }}
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ 120 - sector | int * 10 }}%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>Zawodnik</th>
+                    <th>Numer</th>
+                    <th>Kategoria wiekowa</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for rider in riders %}
+                <tr>
+                    <td><a href="/rider/{{rider.id}}"> {{ rider.first_name }} {{ rider.last_name[0] }}. </a></td>
+
+                    {% if rider.number > 0 %}
+                    <td>{{ rider.number }}</td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+
+                    <td>{{ rider.category }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% if loop.index % 2 == 0 %}
+        </div>
+        <div class="row justify-content-between">
+    {% endif %}
+
+    {% endfor %}
+</div>
+
+{% endblock %}

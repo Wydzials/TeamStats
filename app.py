@@ -3,7 +3,7 @@ from flask import render_template, redirect
 import imports
 from init import db, app
 from sqlalchemy import func
-from models import Rider, Result, Event, Team, Gear, Training
+from models import Rider, Result, Event, Team, Gear, Training, Sector
 
 
 @app.route("/")
@@ -71,6 +71,21 @@ def last_event():
     last_event = sorted(events, key=lambda k: k.date, reverse=True)[0]
     id = last_event.id
     return redirect(f"/event/{id}")
+
+@app.route("/sectors")
+def sectors():
+    sectors = Sector.query.all()
+    # riders = Rider.query.all()
+
+    riders_by_sector = {}
+    for sector in sectors:
+        riders = Rider.query.filter_by(sector_id=sector.id).all()
+        if len(riders) > 0:
+            riders_by_sector[sector.name] = riders
+
+    print(riders_by_sector)
+
+    return render_template("sectors.html", sectors=sectors, riders_by_sector=riders_by_sector)
 
 
 if __name__ == "__main__":
