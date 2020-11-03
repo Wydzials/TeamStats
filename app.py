@@ -1,10 +1,15 @@
-from flask import render_template, redirect
+from flask import render_template, redirect, url_for, request, session
 
 import imports
 from init import db, app
 from sqlalchemy import func
 from models import Rider, Result, Event, Team, Gear, Training, Sector
 
+from dotenv import load_dotenv, find_dotenv
+import os
+
+load_dotenv(find_dotenv())
+app.secret_key = os.getenv("SECRET_KEY")
 
 @app.route("/")
 def index():
@@ -25,7 +30,7 @@ def team():
              "distance_sum": distance_sum,
              "time_sum": time_sum}
 
-    return render_template("team.html", riders=riders, team=team, stats=stats)
+    return render_template("team.html", riders=riders, team=team, stats=stats, session=session)
 
 
 @app.route("/rider/<int:rider_id>")
@@ -72,10 +77,10 @@ def last_event():
     id = last_event.id
     return redirect(f"/event/{id}")
 
+
 @app.route("/sectors")
 def sectors():
     sectors = Sector.query.all()
-    # riders = Rider.query.all()
 
     riders_by_sector = {}
     for sector in sectors:
@@ -85,7 +90,28 @@ def sectors():
 
     print(riders_by_sector)
 
-    return render_template("sectors.html", sectors=sectors, riders_by_sector=riders_by_sector)
+    return render_template("sectors.html", sectors=sectors,
+                           riders_by_sector=riders_by_sector)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username == "admin" and password == "admin":
+            session["username"] = request.form["username"]
+            return redirect(url_for("index"))
+        else:
+            return render_template("login.html", error="Błędne dane logowania!")
+    else:
+        return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
