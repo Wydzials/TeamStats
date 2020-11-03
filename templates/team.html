@@ -58,8 +58,8 @@
                     <td>-</td>
                 {% endif %}
     
-                {% if rider.sector > 0 %}
-                    <td>{{ rider.sector }}</td>
+                {% if rider.sector.name is not none %}
+                    <td>{{ rider.sector.name }}</td>
                 {% else %}
                     <td>-</td>
                 {% endif %}

@@ -1,8 +1,16 @@
 import csv
 from init import db
-from models import Rider, Event, Result, Team, Gear, Training
+from models import Rider, Event, Result, Team, Gear, Training, Sector
 import pandas as pd
 import datetime
+
+
+def create_sectors():
+    if Sector.query.first() is None:
+        for i in range(1, 11):
+            sector = Sector(name=str(i))
+            db.session.add(sector)
+        db.session.commit()
 
 
 def import_team():
@@ -22,11 +30,12 @@ def import_riders():
     with open("data/riders.csv", "r") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            sector_id = Sector.query.filter_by(name=row["sector"]).first().id
             new_rider = Rider(id=row["id"],
                               first_name=row["first_name"],
                               last_name=row["last_name"],
                               number=row["number"],
-                              sector=row["sector"],
+                              sector_id=sector_id,
                               category=row["category"])
 
             if Rider.query.filter_by(first_name=new_rider.first_name).filter_by(last_name=new_rider.last_name).first() is None:
@@ -125,6 +134,7 @@ def import_trainings():
 
 
 def import_all():
+    create_sectors()
     import_team()
     import_riders()
     import_events_results()
