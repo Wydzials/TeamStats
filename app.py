@@ -11,6 +11,7 @@ import os
 load_dotenv(find_dotenv())
 app.secret_key = os.getenv("SECRET_KEY")
 
+
 @app.route("/")
 def index():
     return team()
@@ -30,7 +31,7 @@ def team():
              "distance_sum": distance_sum,
              "time_sum": time_sum}
 
-    return render_template("team.html", riders=riders, team=team, stats=stats, session=session)
+    return render_template("team.html", riders=riders, team=team, stats=stats)
 
 
 @app.route("/rider/<int:rider_id>")
@@ -45,10 +46,13 @@ def rider(rider_id):
     sorted_trainings = sorted(trainings, key=lambda k: k.date, reverse=True)[:20]
 
     results_count = db.session.query(Result).filter_by(rider_id=rider.id).count()
-    distance_sum = db.session.query(func.sum(Result.distance)).filter_by(rider_id=rider.id).scalar()
-    time_seconds = db.session.query(func.sum(Result.time_seconds)).filter_by(rider_id=rider.id).scalar()
+    distance_sum = db.session.query(func.sum(Result.distance)).filter_by(rider_id=rider.id).scalar() or 0
+    time_seconds = db.session.query(func.sum(Result.time_seconds)).filter_by(rider_id=rider.id).scalar() or 0
     time_sum = round(time_seconds / 3600, 1)
-    avg_speed = round(distance_sum / (time_seconds / 3600), 1)
+
+    avg_speed = 0
+    if time_seconds != 0:
+        avg_speed = round(distance_sum / (time_seconds / 3600), 1)
 
     stats = {"results_count": results_count,
              "distance_sum": distance_sum,
@@ -101,17 +105,32 @@ def login():
         password = request.form["password"]
 
         if username == "admin" and password == "admin":
-            session["username"] = request.form["username"]
+            session["username"] = username
             return redirect(url_for("index"))
         else:
             return render_template("login.html", error="Błędne dane logowania!")
     else:
         return render_template("login.html")
 
+
 @app.route("/logout")
 def logout():
     session.pop("username", None)
     return redirect(url_for("index"))
+
+
+@app.route("/result/delete/<int:id>")
+def delete_result(id):
+    if "username" in session and session["username"] == "admin":
+        Result.query.filter_by(id=id).delete()
+        db.session.commit()
+        return redirect(redirect_url())
+    else:
+        return "Brak dostępu!", 401
+
+
+def redirect_url(default="index"):
+    return request.args.get("next") or request.referrer or url_for(default)
 
 
 if __name__ == "__main__":

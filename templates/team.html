@@ -71,7 +71,13 @@
                 {% endif %}
 
                 {% if rider.sector.name is not none %}
-                <td>{{ rider.sector.name }}</td>
+                <td>
+                    {{ rider.sector.name }}
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{120 - 10 * rider.sector.name | int }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                </td>
                 {% else %}
                 <td>-</td>
                 {% endif %}
