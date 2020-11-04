@@ -53,19 +53,19 @@
 
             <ul class="navbar-nav ml-auto">
 
-                {% if not session["username"] == "admin" %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}">
-                        Logowanie
-                    </a>
-                </li>
-                {% else %}
+                {% if session["username"] == "admin" %}
                 <span class="navbar-text">
-                    Zalogowano jako {{ session['username'] }}.
+                    Zalogowano jako administrator
                 </span>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('logout') }}">
                         Wyloguj
+                    </a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">
+                        Logowanie
                     </a>
                 </li>
                 {% endif %}

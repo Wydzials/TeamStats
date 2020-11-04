@@ -1,12 +1,13 @@
 from flask import render_template, redirect, url_for, request, session
-
-import imports
-from init import db, app
 from sqlalchemy import func
 from models import Rider, Result, Event, Team, Gear, Training, Sector
 
 from dotenv import load_dotenv, find_dotenv
+import pandas as pd
 import os
+
+import imports
+from init import db, app
 
 load_dotenv(find_dotenv())
 app.secret_key = os.getenv("SECRET_KEY")
@@ -131,6 +132,29 @@ def delete_result(id):
 
 def redirect_url(default="index"):
     return request.args.get("next") or request.referrer or url_for(default)
+
+
+@app.route("/event/add", methods=["GET", "POST"])
+def add_event():
+    if request.method == "GET":
+        return render_template("add_event.html")
+    else:
+        date = pd.to_datetime(request.form["date"])
+        new_event = Event(name=request.form["name"], date=date)
+        db.session.add(new_event)
+        db.session.commit()
+        return redirect(url_for("index"))
+
+
+@app.route("/result/add", methods=["GET", "POST"])
+def add_result():
+    if request.method == "GET":
+        riders = Rider.query.all()
+        events = Event.query.all()
+        sorted_event = sorted(events, key=lambda k: k.date, reverse=True)
+        return render_template("add_result.html", riders=riders, events=sorted_event)
+    else:
+        return "error", 404
 
 
 if __name__ == "__main__":
