@@ -75,7 +75,7 @@ def event(event_id):
     return render_template("event.html", event=event, results=results)
 
 
-@app.route("/last")
+@app.route("/event/last")
 def last_event():
     events = Event.query.all()
     last_event = sorted(events, key=lambda k: k.date, reverse=True)[0]
@@ -120,9 +120,20 @@ def logout():
     return redirect(url_for("index"))
 
 
+@app.route("/result/add", methods=["GET", "POST"])
+def add_result():
+    if request.method == "GET":
+        riders = Rider.query.all()
+        events = Event.query.all()
+        sorted_event = sorted(events, key=lambda k: k.date, reverse=True)
+        return render_template("add_result.html", riders=riders, events=sorted_event)
+    else:
+        return "error", 404
+
+
 @app.route("/result/delete/<int:id>")
 def delete_result(id):
-    if "username" in session and session["username"] == "admin":
+    if is_admin():
         Result.query.filter_by(id=id).delete()
         db.session.commit()
         return redirect(redirect_url())
@@ -130,8 +141,11 @@ def delete_result(id):
         return "Brak dostępu!", 401
 
 
-def redirect_url(default="index"):
-    return request.args.get("next") or request.referrer or url_for(default)
+@app.route("/events")
+def events():
+    events = Event.query.all()
+    sorted_event = sorted(events, key=lambda k: k.date, reverse=True)
+    return render_template("events.html", events=sorted_event)
 
 
 @app.route("/event/add", methods=["GET", "POST"])
@@ -146,15 +160,23 @@ def add_event():
         return redirect(url_for("index"))
 
 
-@app.route("/result/add", methods=["GET", "POST"])
-def add_result():
-    if request.method == "GET":
-        riders = Rider.query.all()
-        events = Event.query.all()
-        sorted_event = sorted(events, key=lambda k: k.date, reverse=True)
-        return render_template("add_result.html", riders=riders, events=sorted_event)
+@app.route("/event/delete/<int:id>")
+def delete_event(id):
+    if is_admin():
+        Event.query.filter_by(id=id).delete()
+        Result.query.filter_by(event_id=id).delete()
+        db.session.commit()
+        return redirect(redirect_url())
     else:
-        return "error", 404
+        return "Brak dostępu!", 401
+
+
+def is_admin():
+    return "username" in session and session["username"] == "admin"
+
+
+def redirect_url():
+    return request.args.get("next") or request.referrer or url_for("index")
 
 
 if __name__ == "__main__":
