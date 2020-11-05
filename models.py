@@ -52,7 +52,6 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     date = db.Column(db.DateTime(), nullable=False)
-    city = db.Column(db.String(64), nullable=True)
 
     results = db.relationship("Result", backref="event", lazy=True)
 

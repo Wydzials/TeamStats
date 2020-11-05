@@ -37,14 +37,13 @@ def team():
 
 @app.route("/rider/<int:rider_id>")
 def rider(rider_id):
-    rider = Rider.query.filter_by(id=rider_id).first()
+    rider = Rider.query.get(rider_id)
     gear = Gear.query.filter_by(rider_id=rider_id).all()
 
     results = Result.query.filter_by(rider_id=rider.id).all()
     sorted_results = sorted(results, key=lambda k: k.event.date, reverse=True)
 
-    trainings = Training.query.filter_by(rider_id=rider.id).all()
-    sorted_trainings = sorted(trainings, key=lambda k: k.date, reverse=True)[:20]
+    trainings = Training.query.filter_by(rider_id=rider.id).order_by(Training.date.desc()).limit(20).all()
 
     results_count = db.session.query(Result).filter_by(rider_id=rider.id).count()
     distance_sum = db.session.query(func.sum(Result.distance)).filter_by(rider_id=rider.id).scalar() or 0
@@ -65,12 +64,12 @@ def rider(rider_id):
                            stats=stats,
                            gear=gear,
                            results=sorted_results,
-                           trainings=sorted_trainings)
+                           trainings=trainings)
 
 
 @app.route("/event/<int:event_id>")
 def event(event_id):
-    event = Event.query.filter_by(id=event_id).first()
+    event = Event.query.get(event_id)
     results = Result.query.filter_by(event_id=event_id).all()
     return render_template("event.html", event=event, results=results)
 
@@ -78,14 +77,12 @@ def event(event_id):
 @app.route("/sectors")
 def sectors():
     sectors = Sector.query.all()
-
     riders_by_sector = {}
+
     for sector in sectors:
         riders = Rider.query.filter_by(sector_id=sector.id).all()
         if len(riders) > 0:
             riders_by_sector[sector.name] = riders
-
-    print(riders_by_sector)
 
     return render_template("sectors.html", sectors=sectors,
                            riders_by_sector=riders_by_sector)
@@ -114,44 +111,42 @@ def logout():
 
 @app.route("/result/add", methods=["GET", "POST"])
 def add_result():
-    if request.method == "GET":
-        riders = Rider.query.all()
-        events = Event.query.all()
-        sorted_event = sorted(events, key=lambda k: k.date, reverse=True)
-        return render_template("add_result.html", riders=riders, events=sorted_event)
-    elif is_admin():
-        hours = request.form["hours"]
-        minutes = request.form["minutes"]
-        seconds = request.form["seconds"]
+    if is_admin():
+        if request.method == "GET":
+            riders = Rider.query.all()
+            events = Event.query.order_by(Event.date.desc()).all()
+            return render_template("add_result.html", riders=riders, events=events)
+        else:
+            hours = request.form["hours"]
+            minutes = request.form["minutes"]
+            seconds = request.form["seconds"]
 
-        time = pd.to_timedelta(f"{hours}:{minutes}:{seconds}")
-        time_seconds = time.total_seconds()
+            time = pd.to_timedelta(f"{hours}:{minutes}:{seconds}")
+            time_seconds = time.total_seconds()
 
-        p_open = request.form["place-open"]
-        p_category = request.form["place-category"]
+            p_open = request.form["place-open"]
+            p_category = request.form["place-category"]
 
-        place_open = int(p_open.split('/')[0])
-        riders_open = int(p_open.split('/')[1])
+            place_open = int(p_open.split('/')[0])
+            riders_open = int(p_open.split('/')[1])
 
-        place_category = int(p_category.split('/')[0])
-        riders_category = int(p_category.split('/')[1])
+            place_category = int(p_category.split('/')[0])
+            riders_category = int(p_category.split('/')[1])
 
-        new_result = Result(time=time,
-                            time_seconds=time_seconds,
-                            rider_id=request.form["rider"],
-                            event_id=request.form["event"],
-                            distance=request.form["distance"],
-                            category=request.form["category"],
-                            place_open=place_open,
-                            riders_open=riders_open,
-                            place_category=place_category,
-                            riders_category=riders_category)
-        db.session.add(new_result)
-        db.session.commit()
-
-        return redirect(url_for("index"))
-    else:
-        return no_access()
+            new_result = Result(time=time,
+                                time_seconds=time_seconds,
+                                rider_id=request.form["rider"],
+                                event_id=request.form["event"],
+                                distance=request.form["distance"],
+                                category=request.form["category"],
+                                place_open=place_open,
+                                riders_open=riders_open,
+                                place_category=place_category,
+                                riders_category=riders_category)
+            db.session.add(new_result)
+            db.session.commit()
+            return redirect(url_for("index"))
+    return no_access()
 
 
 @app.route("/result/delete/<int:id>")
@@ -166,9 +161,8 @@ def delete_result(id):
 
 @app.route("/events")
 def events():
-    events = Event.query.all()
-    sorted_event = sorted(events, key=lambda k: k.date, reverse=True)
-    return render_template("events.html", events=sorted_event)
+    events = Event.query.order_by(Event.date.desc()).all()
+    return render_template("events.html", events=events)
 
 
 @app.route("/event/add", methods=["GET", "POST"])
@@ -201,21 +195,19 @@ def delete_event(id):
 def edit_rider(id):
     if is_admin():
         if request.method == "GET":
-            rider = Rider.query.filter_by(id=id).first()
+            rider = Rider.query.get(id)
             sectors = Sector.query.all()
             return render_template("edit_rider.html", rider=rider, sectors=sectors)
         else:
-            rider = Rider.query.filter_by(id=id).first()
+            rider = Rider.query.get(id)
 
             rider.first_name = request.form["first-name"]
             rider.last_name = request.form["last-name"]
-
             rider.number = int(request.form["number"])
             rider.category = request.form["category"]
             rider.sector_id = request.form["sector-id"]
 
             db.session.commit()
-
             return redirect(url_for("index"))
     else:
         return no_access()
@@ -234,5 +226,5 @@ def redirect_url():
 
 
 if __name__ == "__main__":
-    #imports.import_all()
+    # imports.import_all()
     app.run(debug=True)
