@@ -197,6 +197,30 @@ def delete_event(id):
         return no_access()
 
 
+@app.route("/rider/<int:id>/edit", methods=["GET", "POST"])
+def edit_rider(id):
+    if is_admin():
+        if request.method == "GET":
+            rider = Rider.query.filter_by(id=id).first()
+            sectors = Sector.query.all()
+            return render_template("edit_rider.html", rider=rider, sectors=sectors)
+        else:
+            rider = Rider.query.filter_by(id=id).first()
+
+            rider.first_name = request.form["first-name"]
+            rider.last_name = request.form["last-name"]
+
+            rider.number = int(request.form["number"])
+            rider.category = request.form["category"]
+            rider.sector_id = request.form["sector-id"]
+
+            db.session.commit()
+
+            return redirect(url_for("index"))
+    else:
+        return no_access()
+
+
 def is_admin():
     return "username" in session and session["username"] == "admin"
 
@@ -210,5 +234,5 @@ def redirect_url():
 
 
 if __name__ == "__main__":
-    imports.import_all()
+    #imports.import_all()
     app.run(debug=True)

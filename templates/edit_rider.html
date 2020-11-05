@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-5">
+        <h2>Edytuj dane zawodnika</h2>
+        <h2>{{ rider.first_name }} {{ rider.last_name }}</h2>
+        <form method="POST" action="/rider/{{ rider.id }}/edit" id="form">
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="first-name">Imię</label>
+                        <input type="text" class="form-control" name="first-name" value="{{ rider.first_name }}" autocomplete="off" required>
+                    </div>
+
+                    <div class="col">
+                        <label for="last-name">Nazwisko</label>
+                        <input type="text" class="form-control" name="last-name" value="{{ rider.last_name }}" autocomplete="off" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="number">Numer</label>
+                        <input type="number" class="form-control" min="0" name="number" value="{{ rider.number }}" autocomplete="off" required>
+                    </div>
+
+                    <div class="col">
+                        <label for="category">Kategoria</label>
+                        <input type="text" class="form-control" name="category" value="{{ rider.category }}" autocomplete="off" required>
+                    </div>
+
+                    <div class="col">
+                        <label for="sector">Sektor</label>
+                        <select class="form-control" name="sector-id">
+                            {% for sector in sectors %}
+                            {% if sector.id == rider.sector_id %}
+                            <option selected="selected" value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% else %}
+                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <input type="submit" class="btn btn-primary" name="submit" value="Zapisz">
+        </form>
+    </div>
+</div>
+{% endblock %}
