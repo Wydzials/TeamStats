@@ -75,14 +75,6 @@ def event(event_id):
     return render_template("event.html", event=event, results=results)
 
 
-@app.route("/event/last")
-def last_event():
-    events = Event.query.all()
-    last_event = sorted(events, key=lambda k: k.date, reverse=True)[0]
-    id = last_event.id
-    return redirect(f"/event/{id}")
-
-
 @app.route("/sectors")
 def sectors():
     sectors = Sector.query.all()
@@ -127,8 +119,39 @@ def add_result():
         events = Event.query.all()
         sorted_event = sorted(events, key=lambda k: k.date, reverse=True)
         return render_template("add_result.html", riders=riders, events=sorted_event)
+    elif is_admin():
+        hours = request.form["hours"]
+        minutes = request.form["minutes"]
+        seconds = request.form["seconds"]
+
+        time = pd.to_timedelta(f"{hours}:{minutes}:{seconds}")
+        time_seconds = time.total_seconds()
+
+        p_open = request.form["place-open"]
+        p_category = request.form["place-category"]
+
+        place_open = int(p_open.split('/')[0])
+        riders_open = int(p_open.split('/')[1])
+
+        place_category = int(p_category.split('/')[0])
+        riders_category = int(p_category.split('/')[1])
+
+        new_result = Result(time=time,
+                            time_seconds=time_seconds,
+                            rider_id=request.form["rider"],
+                            event_id=request.form["event"],
+                            distance=request.form["distance"],
+                            category=request.form["category"],
+                            place_open=place_open,
+                            riders_open=riders_open,
+                            place_category=place_category,
+                            riders_category=riders_category)
+        db.session.add(new_result)
+        db.session.commit()
+
+        return redirect(url_for("index"))
     else:
-        return "error", 404
+        return no_access()
 
 
 @app.route("/result/delete/<int:id>")
@@ -138,7 +161,7 @@ def delete_result(id):
         db.session.commit()
         return redirect(redirect_url())
     else:
-        return "Brak dostępu!", 401
+        return no_access()
 
 
 @app.route("/events")
@@ -153,11 +176,14 @@ def add_event():
     if request.method == "GET":
         return render_template("add_event.html")
     else:
-        date = pd.to_datetime(request.form["date"])
-        new_event = Event(name=request.form["name"], date=date)
-        db.session.add(new_event)
-        db.session.commit()
-        return redirect(url_for("index"))
+        if is_admin():
+            date = pd.to_datetime(request.form["date"])
+            new_event = Event(name=request.form["name"], date=date)
+            db.session.add(new_event)
+            db.session.commit()
+            return redirect(url_for("index"))
+        else:
+            return no_access()
 
 
 @app.route("/event/delete/<int:id>")
@@ -168,11 +194,15 @@ def delete_event(id):
         db.session.commit()
         return redirect(redirect_url())
     else:
-        return "Brak dostępu!", 401
+        return no_access()
 
 
 def is_admin():
     return "username" in session and session["username"] == "admin"
+
+
+def no_access():
+    return "Brak dostępu!", 401
 
 
 def redirect_url():
