@@ -22,6 +22,8 @@ def index():
 def team():
     riders = Rider.query.all()
     team = Team.query.first()
+    results = Result.query.all()
+    sorted_results = sorted(results, key=lambda k: k.event.date, reverse=True)
 
     results_count = db.session.query(Result).count()
     distance_sum = db.session.query(func.sum(Result.distance)).scalar()
@@ -32,11 +34,21 @@ def team():
              "distance_sum": distance_sum,
              "time_sum": time_sum}
 
-    return render_template("team.html", riders=riders, team=team, stats=stats)
+    return render_template("team.html", riders=riders, team=team, stats=stats, results=sorted_results)
 
 
-@app.route("/rider/<int:rider_id>")
+@app.route("/rider/<int:rider_id>", methods=["GET", "POST"])
 def rider(rider_id):
+    if request.method == "POST":
+        if is_admin():
+            new_gear = Gear(type=request.form["type"],
+                            name=request.form["name"],
+                            rider_id=rider_id)
+            db.session.add(new_gear)
+            db.session.commit()
+        else:
+            return no_access()
+
     rider = Rider.query.get(rider_id)
     gear = Gear.query.filter_by(rider_id=rider_id).all()
 
@@ -209,6 +221,16 @@ def edit_rider(id):
 
             db.session.commit()
             return redirect(url_for("index"))
+    else:
+        return no_access()
+
+
+@app.route("/gear/delete/<int:id>")
+def delete_gear(id):
+    if is_admin():
+        Gear.query.filter_by(id=id).delete()
+        db.session.commit()
+        return redirect(redirect_url())
     else:
         return no_access()
 

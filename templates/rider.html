@@ -46,7 +46,7 @@
         </ul>
     </div>
 
-    {% if gear|length > 0 %}
+    {% if gear|length > 0 or session["username"] == "admin" %}
     <div class="col-4">
         <ul class="list-group">
             <li class="list-group-item text-muted">
@@ -59,8 +59,37 @@
             {% for g in gear %}
             <li class="list-group-item text-right">
                 <span class="float-left"><strong>{{ g.type }}</strong></span>{{ g.name }}
+                {% if session["username"] == "admin" %}
+                <td>
+                    <a href="/gear/delete/{{ g.id }}">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="red" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                        </svg>
+                    </a>
+                </td>
+                {% endif %}
             </li>
             {% endfor %}
+
+            {% if session["username"] == "admin" %}
+            <li class="list-group-item text-right">
+                <form method="POST" action="/rider/{{ rider.id }}" id="form">
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <input type="text" class="form-control" name="type" placeholder="Typ" autocomplete="off" required>
+                                <input type="text" class="form-control" name="name" placeholder="Nazwa" autocomplete="off" required>
+                            </div>
+
+                            <div class="col-4">
+                                <input type="submit" class="btn btn-primary" name="submit" value="Dodaj">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            {% endif %}
         </ul>
     </div>
     {% endif %}
