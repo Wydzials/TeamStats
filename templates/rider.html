@@ -132,10 +132,49 @@
             </tbody>
         </table>
 
-        {% if trainings|length > 0 %}
+        {% if session["username"] == "admin" %}
+        <br>
+        <h2>Dodaj trening</h2>
+        <form method="POST" action="/training/add/{{ rider.id }}" id="training">
+            <div class="form-group">
+                <div class="row align-items-end">
+                    <div class="col">
+                        <label for="date">Data</label>
+                        <input type="date" class="form-control" name="date" id="date" required>
+                    </div>
+
+                    <div class="col">
+                        <label for="time">Czas</label>
+                        <input type="number" min="0" max="100" class="form-control" name="hours" placeholder="Godziny" required>
+                    </div>
+                    <div class="col">
+                        <input type="number" min="0" max="59" class="form-control" name="minutes" placeholder="Minuty" required>
+                    </div>
+                    <div class="col">
+                        <input type="number" min="0" max="59" class="form-control" name="seconds" placeholder="Sekundy" required>
+                    </div>
+
+                    <div class="col">
+                        <label for="distance">Dystans [km]</label>
+                        <input type="number" min="0.01" max="1000" step="0.01" class="form-control" name="distance" autocomplete="off" required>
+                    </div>
+
+                    <div class="col-2">
+                        <label for="elevation">Przewyższenia [m]</label>
+                        <input type="number" min="0" max="10000" step="1" class="form-control" name="elevation" autocomplete="off" required>
+                    </div>
+
+                    <div class="col">
+                        <input type="submit" class="btn btn-primary" name="submit" value="Dodaj">
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+
+        {% if trainings|length > 0%}
         <br>
         <h2>Ostatnie treningi</h2>
-        <br>
         <table class="table table-sm table-hover table-striped">
             <thead>
                 <th>Data</th>
@@ -143,6 +182,9 @@
                 <th>Dystans</th>
                 <th>Średnia prędkość</th>
                 <th>Przewyższenia</th>
+                {% if session["username"] == "admin" %}
+                <th>Usuń</th>
+                {% endif %}
             </thead>
 
             <tbody>
@@ -153,6 +195,14 @@
                     <td>{{ training.distance|round(2) }} km</td>
                     <td>{{ training.average_speed|round(2) }} km/h</td>
                     <td>{{ training.elevation }} m</td>
+
+                    {% if session["username"] == "admin" %}
+                    <td>
+                        <a href="/training/delete/{{ training.id }}">
+                            <img src="{{ url_for('static', filename='trash.svg') }}">
+                        </a>
+                    </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

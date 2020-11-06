@@ -235,6 +235,42 @@ def delete_gear(id):
         return no_access()
 
 
+@app.route("/training/delete/<int:id>")
+def delete_training(id):
+    if is_admin():
+        Training.query.filter_by(id=id).delete()
+        db.session.commit()
+        return redirect(redirect_url())
+    else:
+        return no_access()
+
+
+@app.route("/training/add/<int:rider_id>", methods=["POST"])
+def add_training(rider_id):
+    if is_admin():
+        hours = request.form["hours"]
+        minutes = request.form["minutes"]
+        seconds = request.form["seconds"]
+        time = pd.to_timedelta(f"{hours}:{minutes}:{seconds}")
+        date = pd.to_datetime(request.form["date"])
+
+        distance = float(request.form["distance"])
+        average_speed = distance / (time.seconds / 3600)
+
+        new_training = Training(rider_id=rider_id,
+                                time=time,
+                                date=date,
+                                distance=distance,
+                                average_speed=average_speed,
+                                elevation=request.form["elevation"])
+
+        db.session.add(new_training)
+        db.session.commit()
+        return redirect(redirect_url())
+    else:
+        return no_access()
+
+
 def is_admin():
     return "username" in session and session["username"] == "admin"
 
@@ -248,5 +284,5 @@ def redirect_url():
 
 
 if __name__ == "__main__":
-    # imports.import_all()
+    imports.import_all()
     app.run(debug=True)
