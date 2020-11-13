@@ -36,7 +36,8 @@ def import_riders():
                               last_name=row["last_name"],
                               number=row["number"],
                               sector_id=sector_id,
-                              category=row["category"])
+                              category=row["category"],
+                              team_id=1)
 
             if Rider.query.filter_by(first_name=new_rider.first_name).filter_by(last_name=new_rider.last_name).first() is None:
                 db.session.add(new_rider)

@@ -18,6 +18,7 @@ class Rider(db.Model):
     category = db.Column(db.String(16))
 
     sector_id = db.Column(db.Integer, db.ForeignKey("sectors.id"), nullable=True)
+    team_id = db.Column(db.Integer, db.ForeignKey("teams.id"), nullable=True)
 
     results = db.relationship("Result", backref="rider", lazy=True)
     gear = db.relationship("Gear", backref="rider", lazy=True)
@@ -60,11 +61,13 @@ class Event(db.Model):
 
 
 class Team(db.Model):
-    __tablename__ = "team"
+    __tablename__ = "teams"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     established = db.Column(db.Integer, nullable=False)
     city = db.Column(db.String(64), nullable=False)
+
+    riders = db.relationship("Rider", backref="team", lazy=True)
 
 
 class Gear(db.Model):

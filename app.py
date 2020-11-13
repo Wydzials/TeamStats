@@ -2,15 +2,17 @@ from flask import render_template, redirect, url_for, request, session
 from sqlalchemy import func
 from models import Rider, Result, Event, Team, Gear, Training, Sector
 
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
+from os import getenv
 import pandas as pd
-import os
+from bcrypt import checkpw
 
 import imports
 from init import db, app
 
-load_dotenv(find_dotenv())
-app.secret_key = os.getenv("SECRET_KEY")
+load_dotenv()
+app.secret_key = getenv("SECRET_KEY")
+ADMIN_PASSWORD = getenv("ADMIN_PASSWORD")
 
 
 @app.route("/")
@@ -106,7 +108,7 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        if username == "admin" and password == "admin":
+        if username == "admin" and checkpw(password.encode(), ADMIN_PASSWORD.encode()):
             session["username"] = username
             return redirect(url_for("index"))
         else:
